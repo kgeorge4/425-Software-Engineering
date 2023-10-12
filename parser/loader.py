@@ -21,7 +21,7 @@ collection_name = "ulyssesChap1"
 docID = "chap1"
 
 # connecting to MongoDB server
-client = MongoClient("mongodb://localhost:27017/") 
+client = MongoClient("mongodb://127.0.0.1:27017/") 
 db = client["textStorage"]
 collection = db[collection_name]
 
@@ -87,6 +87,7 @@ for paragraph in paragraphs:
 
         # tags quotes
         if(is_quote(sentence)):
+            sentence = sentence.replace('—', '')
             numberedSentence = ' "'+ sentence + '" '
             quoteCtr += 1
         # tags sentences
