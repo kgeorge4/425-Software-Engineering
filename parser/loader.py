@@ -88,7 +88,7 @@ for paragraph in paragraphs:
         # tags quotes
         if(is_quote(sentence)):
             sentence = sentence.replace('—', '')
-            numberedSentence = ' "'+ sentence + '" '
+            numberedSentence = '"'+ sentence + '"'
             quoteCtr += 1
         # tags sentences
         else:
