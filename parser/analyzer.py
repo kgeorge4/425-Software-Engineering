@@ -13,10 +13,26 @@ collection = db["ulyssesChap1"]
 # find document
 document = collection.find_one({"_id": "chap1"})
 
-paragraph1 = document["content"][3]
-sentence1 = paragraph1["sentences"][0]
+# rebuild sentences
+text = []
 
-print(sentence1)
+# iterate over content
+for paragraph in document["content"]:
+
+    # if a sentence add to text
+    if("sentences") in paragraph:
+        text.extend(paragraph["sentences"])
+
+combination = '\n'.join(text)
+
+doc = nlp(combination)
+for ent in doc.ents:
+      print(ent.text, ent.label_)
+
+
+
+client.close()
+
 
 """
 text2= nlp(doc)
