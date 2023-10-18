@@ -1,0 +1,5 @@
+TO RUN:
+  1) Enter virtual environment source WebsiteVENV/bin/activate
+  2) Type 'cd ~/WebsiteVENV/front-end/Finalized\ App/' in terminal
+  3) Type 'flask run' in terminal
+  4) Open opened port in browser
