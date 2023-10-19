@@ -2,16 +2,17 @@ import spacy
 import pymongo
 from pymongo import MongoClient
 from spacy import displacy
-from spacy.language import Language
 from spacy_langdetect import LanguageDetector
+from spacy.language import Language
 from langdetect import detect
+import json
 
 langList = {
     "en": "English",
     "ro": "Romainian",
     "it": "Italian",
     "lt": "Latin",
-    "" : "Latin"
+    "" : "Uknown"
 }
 
 
@@ -19,10 +20,11 @@ def codetoString(code):
     return langList.get(code)
 
 
-
+# setup for spacy
 spacy.prefer_gpu()
 nlp = spacy.load("en_core_web_sm")
 
+# connection for mongoDB
 client = MongoClient("mongodb://localhost:27017/") 
 db = client["textStorage"]
 collection = db["ulyssesChap1"]
@@ -30,13 +32,11 @@ collection = db["ulyssesChap1"]
 # find document
 document = collection.find_one({"_id": "chap1"})
 
-oneDoc = {
-    "paragraphs": []
-}
-
+# initialize categorized data to return to database
+categorized = []
 
 # stores paragraph num
-paragraphCtr = 0
+paragraphCtr = 1
 
 # iterate over content
 for paragraph in document["content"]:
@@ -48,27 +48,43 @@ for paragraph in document["content"]:
     # if a sentence add to text
     if("sentences") in paragraph:
         # iterate accross each paragrah sentence
-        for sentence in paragraph["sentences"]:
-            # if sentence is in latin translate to english to make easier to understand
-            #print(sentence)
+        for sentenceBlock in paragraph["sentences"]:
+            # tag sentence to find what language it is
+            sentence = sentenceBlock["text"]
+
             language = detect(sentence)
             lang = codetoString(language)
-            sentenceBlock = {
+
+            paragraphBlock["sentences"].append({
                 "text": sentence,
-                "text-lang": lang
-            }
+                "text_meaning": None,
+                "language": lang,
+                "text_type": None,
+                "narrator": None,
+                "indications": [],
+                "involves":[],
+                "spoken_by": None,
+                "spoken_to": None
+            })
 
-            paragraphBlock["sentences"].append(sentenceBlock)
-
-        oneDoc["paragraphs"].append(paragraphBlock)
+    # append the paragraph block to the categorized data
+    categorized.append(paragraphBlock)
 
     paragraphCtr += 1
 
+categorizedData = {"data: ": categorized}
+
 # creates new analysis collection
 analysis_collection = db["analysis"]
-analysis_collection.insert_one(oneDoc)
+analysis_collection.insert_one(categorizedData)
 
-print(oneDoc)
+
+with open("categories.json", "w") as file:
+    json.dump(categorized, file)
+
+
+print("categorized data.")
+
 
 client.close()
 
