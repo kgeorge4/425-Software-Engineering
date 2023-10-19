@@ -4,6 +4,8 @@ import pymongo
 import json
 from pymongo import MongoClient
 
+TEXT_FILE = "chap1"
+
 # determines if line is a quote using regular expression search
 def is_quote(line):
   quote = re.search('—([^"]*)', line)
@@ -11,11 +13,6 @@ def is_quote(line):
       return True
   else: 
       return False
-    
-"""
-# first num is paragraph, second is sentence number
-dataArr = []
-"""
 
 collection_name = "ulyssesChap1"
 docID = "chap1"
@@ -35,52 +32,30 @@ else:
 
 
 # open chapter1 and read the text file to be parsed
-with open("chap1", "r", encoding="utf-8") as file:
+with open(TEXT_FILE, "r", encoding="utf-8") as file:
     results = file.read()
 
-# tokenize into words with nltk
-#words = word_tokenize(results)
-# output tokens ( words derived from spaces and newlines )
-#print(text_tokens)
-
-"""
-# better tokens of sentences after removing newlines
-text = results.replace("\n", " ")
-sentences = sent_tokenize(text)
-
-"""
 # split the text into paragraphs
 paragraphs = blankline_tokenize(results)
 
-"""
-# print the sentences
-for i , sentence in  enumerate (sentences, start=1):
-    tagged_sentence = f"Sentence {i}: {sentence}"
-    print(tagged_sentence)
-"""
+# initialize return document 
 doc = {
     "_id": docID,
     "content": []
 }
 
-paragraphCtr = 0
-sentenceCtr = 0
-quoteCtr = 0
+
+sentenceCtr = 1
+paragraphCtr = 1
 
 
 # iterate over paragraphs
 for paragraph in paragraphs:
 
-
-    # each paragraph gets numbered
-    uniqueParagraph = f"{paragraphCtr}:{paragraph}"
-    #print(uniqueParagraph)
+    paragraphList = []
 
     # break each paragraph into sentences
     sentences = sent_tokenize(paragraph)
-
-    # holds sentences for mongoDB
-    sentenceList = []
 
     # pass over each sentence in paragraph
     for sentence in sentences:
@@ -88,19 +63,19 @@ for paragraph in paragraphs:
         # tags quotes
         if(is_quote(sentence)):
             sentence = sentence.replace('—', '')
-            numberedSentence = '"'+ sentence + '"'
-            quoteCtr += 1
-        # tags sentences
-        else:
-            numberedSentence = sentence
-            sentenceCtr += 1
+            sentence = '"' + sentence + '"'
 
-
-        sentenceList.append(numberedSentence)
+        paragraphList.append({        
+                                "sentenceNum": sentenceCtr,
+                                "text": sentence
+                            })
         #print(numberedSentence)
+        sentenceCtr+=1
+
+    # add to current nested block
     documentData = {
-        "paragraph" : paragraphCtr,
-        "sentences" : sentenceList
+        "paragraphNum" : paragraphCtr,
+        "sentences" : paragraphList
     }
 
     # increment paragraph counter
@@ -108,8 +83,14 @@ for paragraph in paragraphs:
 
     # add to current content
     doc["content"].append(documentData)
+
 # inserts into mongoDB
 collection.insert_one(doc)
+
+with open("organizedParagraphs.json", "w") as file:
+    json.dump(doc, file)
+
+print(f"Collection '{collection_name}' has been rebuilt.")
 
 # close client
 client.close()
