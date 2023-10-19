@@ -21,15 +21,25 @@ for paragraph in document["content"]:
 
     # if a sentence add to text
     if("sentences") in paragraph:
+        # iterate accross each paragrah sentence
+        #for sentence in paragraph["sentences"]:
+            # if sentence is in latin translate to english to make easier to understand
         text.extend(paragraph["sentences"])
+        text.append("-------------------------------")
+
 
 combination = '\n'.join(text)
+#print(combination)
+
+characterList = set([])
 
 doc = nlp(combination)
 for ent in doc.ents:
-      print(ent.text, ent.label_)
+      if(ent.label_ == "PERSON"):
+           characterList.add(ent.text)
+      #print(ent.text, ent.label_)
 
-
+print(characterList)
 
 client.close()
 
