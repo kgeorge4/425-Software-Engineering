@@ -2,4 +2,3 @@
 2. linux lab login
 3. ssh hs101-1
 4. ssh student@10.251.12.80
-5. password Dreamteam
