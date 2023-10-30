@@ -1,0 +1,4 @@
+every chapter has same categories except one rheotorical chapter.
+recording timestamps and flags into records to retain where user left off, tracking alteration
+1. highlight current sentecnes being edited
+2. 
