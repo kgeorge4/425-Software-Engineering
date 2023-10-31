@@ -95,7 +95,10 @@ for paragraph in document["content"]:
             if(langTag["language"] != "en"):
                 translation = translator.translate(sentence["text"], dest="en")
                 myDict["translation"] = translation.text
-
+            categoryList[1]["involves"] = []
+            for ent in doc.ents:
+                if( ent.label_ == "PERSON"):
+                    categoryList[1]["involves"].append(ent.text)
             myDict.update(categoryList[1])
 
             paragraphBlock["sentences"].append(myDict)
