@@ -1,11 +1,26 @@
 import spacy
 import pymongo
+import nltk
+from nltk.tokenize import TreebankWordTokenizer as twt
 from pymongo import MongoClient
 from spacy import displacy
 from spacy_langdetect import LanguageDetector
 from spacy.language import Language
 from googletrans import Translator, constants
 import json
+
+"""
+
+def find_characters(chapter, num):
+
+    collection = textDB['analysis']
+    document = collection.find_one({"_id": chapter})
+    categoricalD = document['data']
+
+    li = (categoricalD[0]['sentences'][num]['actors'])
+    return "\n".join(li)
+
+"""
 
 
 # list of all possible languages from the text
@@ -44,6 +59,10 @@ collection = db["ulyssesChap1"]
 # find document
 document = collection.find_one({"_id": "chap1"})
 
+if "analysis" in db.list_collection_names():
+    db["analysis"].drop()
+
+
 # initialize categorized data to return to database
 categorized = []
 
@@ -61,7 +80,6 @@ for k,v in categoryDB.items():
         categoryList.append(k)
         categoryList.append(v)
 
-#print(categoryList[1])
 
 # stores paragraph num
 paragraphCtr = 1
@@ -95,11 +113,29 @@ for paragraph in document["content"]:
             if(langTag["language"] != "en"):
                 translation = translator.translate(sentence["text"], dest="en")
                 myDict["translation"] = translation.text
+
+
+            categoryList[1]["actors"] = []
             categoryList[1]["involves"] = []
+            categoryList[1]["action_types"] = []
+            categoryList[1]["action_modifier"] = []
             for ent in doc.ents:
-                if( ent.label_ == "PERSON"):
+                if(ent.label_ == "PERSON"):
+                    categoryList[1]["actors"].append(ent.text)
                     categoryList[1]["involves"].append(ent.text)
+            for token in doc:
+                if(token.pos_ == "VERB"):
+                    categoryList[1]["action_types"].append(token.text)
+                if(token.pos_ == "NOUN" or token.pos_ == "PRON"):
+                    categoryList[1]["involves"].append(token.text)
+                if(token.pos_ == "ADV"):
+                    categoryList[1]["action_modifier"].append(token.text)
+            # for ent in doc2.ents:
+            #     if(doc2.ent == "VERB"):
+            #         categoryList[1]["action_types"].append(ent.text)    
             myDict.update(categoryList[1])
+
+            
 
             paragraphBlock["sentences"].append(myDict)
 
@@ -108,7 +144,9 @@ for paragraph in document["content"]:
 
     paragraphCtr += 1
 
-categorizedData = {"data: ": categorized}
+categorizedData = {
+                    "_id" : "chap1",
+                    "data": categorized    }
 
 # use analysis collection
 analysis_collection = db["analysis"]
