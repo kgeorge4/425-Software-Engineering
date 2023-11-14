@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="navbar">
+  <a href="/dashboard">
+    <strong>Welcome </strong>{{ session['user']['name'] }}!<br>
+  </a>
+  <a href="/dashboard">Analysis</a>
+  <a href="/user/signout" class="right">Sign Out</a>
+</div>
+
+<div class="row">
+  <br><br>
+
+  <div1 class="column1" style="background-color:#faf7f7;">
+    <h2 class="center">
+      <i class="arrow left-arrow">
+      </i>
+      <i class="arrow right-arrow">
+      </i>
+    <div class="dropdown">The Chapter
+      <div class="dropdown-content">
+        <a>Chapter 1</a>
+        <a>Chapter 2</a>
+        <a>Chapter 3</a>
+      </div>
+    </div>
+  </h2>
+    {% set c = namespace( ctr = 0 ) %}
+    {% for sent in paragraphs %}
+      
+      {% if sent == "%&%" %}
+        <p></p>
+
+      {% else %}
+        <span class = "clickable" id="{{c.ctr}}" onclick="sendIndex({{c.ctr}}, this.id)">{{chapter[c.ctr]}}</span>
+        {% set c.ctr = c.ctr + 1 %}
+
+      {% endif %}
+
+    {% endfor %}
+  </div1> 
+    
+  <div class="column2" style="background-color:#fcfafa;">
+    <h2>Selected Sentence </h2>
+    <p id="selected-sentence">Click on a sentence on the left to display it here.</p>
+  </div>
+
+  <div1 class="column2" style="background-color:#fcfafa;">
+    <h2>Characters | Categories | Other |</h2>
+      <p></p>
+  </div1>
+
+</div>
+
+{% endblock %}
