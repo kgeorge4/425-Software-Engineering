@@ -1,0 +1,13 @@
+This is the demo text file:
+
+If you wish to remove this file navigate to the select text page and click on the trash can to the right of the file.
+
+You can navigate chapters of future texts that you upload using the '<' and '>' buttons at the top of this box or by using the dropdown menu.
+
+The tabs that are on the right side contain features to markup text and add to initial categorization, additionally being able to add notes.
+ 
+Try out the highlighting and categorization features of this text reader!
+
+The customizable color key saves labels and colors if you choose to use it for highlighting.
+
+Upload a text to get started and have fun!

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="navbar">
+  <img src="/joyce/static/OIG1.png" class="navbar-logo" width="50" height="50" />
+  <a>
+    <strong>Welcome </strong>{{ session['user']['name'] }}!<br>
+  </a>
+  <a href="/joyce/loader">Select Text</a>
+  <a href="/joyce/user/signout" class="right">Sign Out</a>
+  <a href="/joyce/accountInfo" class="right">My Account</a>
+  <a href="/joyce/help" class="right">Help</a>
+</div>
+</div>
+
+<!--div class="hide" id="navbarDropdownmenu">
+  <div class="grid">
+    <a href="#">Link 1</a>
+    <a href="#">Link 2</a>
+    <a href="#">Link 3</a>
+   </div>
+</div-->
+
+<br><br>
+
+<div1 class="accountcol2">
+  <h1 class="center">Your Work:</h1>
+    <ul>
+        {% for table in tables %}
+        <ul>
+            <span class = "clickable" id="mongo-table" onclick="sendTable('{{table}}')">{{table.split("_")[0]}}</span></ul>
+        {% endfor %}
+    </ul>
+</div1>
+
+ <div1 class="accountcol1">
+
+   <h1 class="center">My Account:</h1>
+
+  <p>Unique ID: {{ session['user']['_id'] }}</p>
+  <p>User Name: {{session['user']['name'] }} <button onclick="showUserName()">Edit</button>
+    <input class="hide" type="text" id="new-username"/>
+    <button class="hide" id="usernameOK" onclick="updateUsername()">ok</button>
+  </p>
+  <p>Password: {{ session['user']['Password'] }}<button onclick="showPassword()">Edit</button>
+    <input class="hide" type="text" id="new-password"/>
+    <button class="hide" id="passwordOK" onclick="updatePassword()">ok</button>
+  </p>
+  <p>Last Signed Out: {{ session['user']['signout_time'] }}</p>
+ </div1>
+
+ <div1 class="accountcol3">
+  <h1 class="center">Most recent work:</h1>
+  <p>Current text: {{ session['user']['current_text'] }}</p>
+  <p>Current Chapter: {{ session['user']['current_chapter'] }}</p>
+  <p>Current Index: {{ session['user']['current_index'] }}</p>
+  <p>Current Sentence: {{ session['user']['current_sentence'] }}</p>
+  <p>Current Phrase: {{ session['user']['current_phrase'] }}</p>
+  <p>Current Color: {{ session['user']['current_color'] }}</p>
+</div1>
+
+{% endblock %}

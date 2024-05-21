@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="navbar">
+  <img src="/joyce/static/OIG1.png" class="navbar-logo"  width="50" height="50" />
+    <a>
+      <strong>Welcome </strong>{{ session['user']['name'] }}!<br>
+    </a>
+    <a href="/joyce/loader">Select Text</a>
+    <a href="/joyce/user/signout" class="right">Sign Out</a>
+    <a href="/joyce/accountInfo" class="right">My Account</a>
+    <a href="/joyce/help" class="right">help</a>
+  </div>
+
+  <br><br>
+
+  <div class="accountcontainer">
+    <h4 class="center">Frequently Asked Questions</h4>
+    <hr width="100%" size="2">
+
+    <details>
+      <summary>What is the page when I first signed up or logged in?</summary>
+      <div>
+       <li>When you login for the first time it will give you the select text webpage.</li>
+       <li>The left column shows you the text that is previously uploaded by you.</li>
+       <li>If you logged in for the first time then select text portion will be empty till you upload a file in it.</li>
+       <li>You can upload a text from the right colum which shows you the upload text.</li>
+     </div>
+    </details>
+    <hr width="100%" size="2">
+
+    <details>
+      <summary>How to upload a new text?</summary>
+      <div>
+       <li>If you are logged in or signed in for the first time you are on the correct page.</li>
+       <li>If you want to add new file on top of other please click on the select text on the navigation bar.</li>
+       <li>Here you can click on th choose file which is on the upload text column.</li>
+       <li>You can only select one file at a time and no more than that so choose a file and select ok.</li>
+       <li>Once you see that file name next ti the choose file button click upload and that will start uploading a file for you.</li>
+     </div>
+    </details>
+    <hr width="100%" size="2">
+
+    <details>.container {
+      max-width: 90%;
+      max-height: 90%;
+      margin: auto auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+      <summary>How does the select text works?</summary>
+      <div>
+       <li>If you have to upload a new work then there is a column on the right which shows upload text.</li>
+       <li>Click on the select text and it will take you to files to select a file and upload it.</li>
+       <li>Once uploaded you can see it on the left column which indicates select text and all the uploaded files will be saved there.</li>
+       <li>If you need to open the uploaded work you can directly access it from the uploaded files column.</li>
+     </div>
+    </details>
+    <hr width="100%" size="2">
+
+    <details>
+      <summary>Where can I see my information?</summary>
+      <div>
+       <li>My account page is the source where you can see your information and what file you are currently working on.</li>
+       <li>You can track your last signed out date and what line of the file you are on and what is the chapter that you are currenty working on.</li>
+       <li>You also have the your work column which stores all your previous work and files for which you do not have to go the loader page to open the previously uploaded files.</li>
+     </div>
+    </details>
+    <hr width="100%" size="2">
+
+    <details>
+      <summary>How does the My Account works?</summary>
+      <div>
+        <li>On the left top colum you have all the files that you have worked on or working on.
+          <dd><li>You cannot add new file from here but you can open the files that were uploaded earlier.</li></dd>
+        </li>
+        <br>
+        <li>On the left bottom column you can see the most recent work that you have worked on.
+          <dd><li>It shows you your most recent work on the file including text, chapter, index, sentence, phrase and color.</li></dd>
+        </li>
+        <br>
+        <li>On the right side column you can see your user-name, password and last signed out date.
+          <dd><li>You can update your user-name and password by clicking edit next to your user-name and password</li></dd>
+        </li>
+      </div>
+    </details>
+    <hr width="100%" size="2">
+
+    <details>
+      <summary>How can I change my username?</summary>
+      <div>
+       <li>If you are searching to change your username then you can go to the my account page that is on the top right side of the navigation bar.</li>
+       <li>On the right column you will see my information and your username in there.</li>
+       <li>To change it you just need to click edit and it will give you a box to input new username.</li>
+       <li>Once you put your new username click on ok and then it will give you a pop-up alert showing that username updated successfully and you are all set with the new username.</li>
+     </div>
+    </details>
+    <hr width="100%" size="2">
+
+    <details>
+      <summary>How can I change my Password?</summary>
+      <div>
+       <li>If you are searching to change your password then you can go to the my account page that is on the top right side of the navigation bar.</li>
+       <li>On the right column you will see my information and password section in there (You cannot see you old password because of the privacy of your data but once you are logged in you can change the password from there.)</li>
+       <li>To change it you just need to click edit and it will give you a box to input new password.</li>
+       <li>Once you put your new password click on ok and then it will give you a pop-up alert showing that password updated successfully and you are all set with the new password.</li>
+     </div>
+    </details>
+    <hr width="100%" size="2">
+
+    <details>
+      <summary>Whats the screen after I clciked the file from select text?</summary>
+      <div>
+        <li>This is the page where you will see all the data from the file.</li>
+        <li>It has the left column to show you the original text from the file.</li>
+        <li>It has the right top column to show you the current sentence you are working on or modifying on.</li>
+        <li>The right bottom column is a tool box, this will help you to modify the text and save the changes in the text like highlighting, searching the names or categoris from the sentence and much more.</li>
+      </div>
+    </details>
+    <hr width="100%" size="2">
+
+    <details>
+     <summary>How does the main page works which has the file name?</summary>
+     <div>
+      <li>The left column indicates the text header and chapter number as header. You can hover around it to go to another chapter or use 
+        the arrows on the side to navigate to previous chapter or the ext chapter.</li>
+      <li>The right top column will diplay you the current senetce that you selected and want to work on.</li>
+      <li>The right bottom column is like a tool box where you can modify multiple things.
+        <dd><li>Inspect sentence will tell you to select a word and you can color highlight it using the color key at the bottom of the column.</li></dd>
+        <dd><li>The characters will show you the characters present in the current sentence you are working on. If there is no charcater it will display no characters found</li></dd>
+        <dd><li>Involve shows you who is involved in the sentence and what other categories are present in there</li></dd>
+        <dd><li>Other is for future use and it might have more functionality</li></dd>
+
+      </li>
+     </div>
+    </details>
+  </div>
+  
+
+  {% endblock %}

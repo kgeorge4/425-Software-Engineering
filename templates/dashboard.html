@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="navbar">
+  <img src="/joyce/static/OIG1.png" class="navbar-logo"  width="50" height="50" />
+  <a>
+    <strong>Welcome </strong>{{ session['user']['name'] }}!<br>
+  </a>
+  <a href="/joyce/loader">Select Text</a>
+  <a href="/joyce/dashboard/{{fileName}}/{{1}}">{{ fileNameDisplayed }}</a>
+  <a href="/joyce/user/signout" class="right">Sign Out</a>
+  <a href="/joyce/accountInfo" class="right">My Account</a>
+  <a href="/joyce/help" class="right">help</a>
+</div>
+
+<div class="row">
+  <br><br>
+
+  <div class="dashcol1" style="background-color:#faf7f7;" onload="displayColumn1('{{ fileName }}', '{{ chapterNum }}')">
+    <div class="sticky-top">
+      <h2 class="center">
+        <i class="arrow left-arrow" onclick="navigateChapter(-1, '{{ fileName }}', '{{ chapterNum }}', '{{ numberOfChapters }}')"></i>
+        <i class="arrow right-arrow" onclick="navigateChapter(1, '{{ fileName }}', '{{ chapterNum }}', '{{ numberOfChapters }}')"></i>
+      
+        <div class="dropdown"> {{fileNameDisplayed}} :  {{chapterNum}}
+          <div class="dropdown-content">
+          
+          {% for c in range(1, numberOfChapters+1) %}
+          <a href="/joyce/dashboard/{{ fileName }}/{{ c }}">{{ fileNameDisplayed }} {{ c }}</a>
+          {% endfor %}
+
+          </div>
+        </div>
+      </h2>
+    </div>
+      <div class = "textContent" id="textDisplay" >
+        {% set c = namespace( ctr = 0 ) %}
+        {% set n = namespace( num = 1 ) %}
+        <span style="font-size: 75%;">{{n.num}}.</span>
+        {% set n.num = n.num + 1 %}
+        {% for sent in paragraphs %}
+          
+          {% if sent == "¶" %}
+            <p></p>
+            <span style="font-size: 75%;">{{n.num}}.</span>
+            {% set n.num = n.num + 1 %}
+    
+          {% else %}
+          <!-- Span for full sentence -->
+          <span class = "clickable" id="{{c.ctr}}" onclick="sendIndex('{{fileName}}', '{{chapterNum}}', '{{c.ctr}}', this.id)">
+            
+            {% for word in chapter[c.ctr] -%}
+              <span style="color:{{word[1]}}; background-color: {{convert_to_rgb(word[2])}};display: inline-block;">{{word[0]}}&nbsp;</span>
+            {%- endfor %}
+
+          </span>
+            {% set c.ctr = c.ctr + 1 %}
+    
+          {% endif %}
+    
+        {% endfor %}
+    </div>
+  </div> 
+
+  <div class="dashcol2">
+    <h2>Selected Sentence </h2>
+    <p id="selected-sentence">Click on a sentence on the left to display it here.</p>
+  </div>
+  
+  <div class="dashcol3">
+
+    <h2 class="selector">
+      <span class = "clickable" onclick="showInspect()">Inspect Sentence</span> | 
+      <span class = "clickable" onclick="showSearch()">Search</span> | 
+      <span class = "clickable" onclick="showCategories()">Categories</span> |
+      <span class = "clickable" onclick="showNotes()">Notes</span>
+    </h2>
+      <!-- Content for inspect sentence -->
+      <div id="inspect-sentence" class="inner-column3">
+        <p id="highlightText">Highlight a word on the right to display it here.</p>
+
+        <label for="color-picker" id="color-picker-label" class="color-picker-label" >Select a color for highlighting text.</label>
+        <input type="color" id="color-picker" class="color-picker" value="{{user_color}}" oninput="send_color(value)"/>
+
+        <input type="submit" class="submit-highlight" value="Highlight" onclick="highlight()">
+
+        <label for="switch-highlight" id="switch-highlight-label" class="switch-highlight-label">Check to highlight background.</label>
+        <input type="checkbox" id="switch-highlight" class="switch-highlight">
+        
+        <button class="color-key" onclick="showKey('popup')">Color Key</button>
+        <div id="popup" style="display:none;" class="card-small">
+          <h2 id="key_header">Colors
+          <span class="key_header_label">Select plus to add a keyword.</span></h2>
+          <span class="close-tab" onclick="closePopup('popup')">x</span>
+
+          <div class="grid-container">
+            <div class="grid-item">
+              <input type="color" id="key_color_1" value="{{key_list[0][0]}}" oninput="updateKeyColor(value, this.id)">&ensp;
+              <span id="key_name_1" class="clickable" onclick="showKeyPopup('keyPopup', this.id)">{{key_list[0][1]}}</span>
+              <img src="{{ url_for('static', filename='highlighter2.webp') }}" class="table-pic" onclick="change_color('0', '{{key_list[0][1]}}')"/>
+            </div>
+            <div class="grid-item">
+              <input type="color" id="key_color_2" class="clickable" value="{{key_list[1][0]}}" oninput="updateKeyColor(value, this.id)">&ensp;
+              <span id="key_name_2" class="clickable" onclick="showKeyPopup('keyPopup', this.id)">{{key_list[1][1]}}</span>&emsp;&emsp;
+              <img src="{{ url_for('static', filename='highlighter2.webp') }}" class="table-pic-right" onclick="change_color('1', '{{key_list[1][1]}}')"/>
+            </div>
+            <div class="grid-item">
+              <input type="color" id="key_color_3" value="{{key_list[2][0]}}" oninput="updateKeyColor(value, this.id)">&ensp;
+              <span id="key_name_3" class="clickable" onclick="showKeyPopup('keyPopup', this.id)">{{key_list[2][1]}}</span>
+              <img src="{{ url_for('static', filename='highlighter2.webp') }}" class="table-pic" onclick="change_color('2', '{{key_list[2][1]}}')"/>
+            </div>
+            <div class="grid-item">
+              <input type="color" id="key_color_4" class="clickable" value="{{key_list[3][0]}}" oninput="updateKeyColor(value, this.id)">&ensp;
+              <span id="key_name_4" class="clickable" onclick="showKeyPopup('keyPopup', this.id)">{{key_list[3][1]}}</span>&emsp;&emsp;
+              <img src="{{ url_for('static', filename='highlighter2.webp') }}" class="table-pic-right" onclick="change_color('3', '{{key_list[3][1]}}')"/>
+            </div>
+            <div class="grid-item">
+              <input type="color" id="key_color_5" value="{{key_list[4][0]}}" oninput="updateKeyColor(value, this.id)">&ensp;
+              <span id="key_name_5" class="clickable" onclick="showKeyPopup('keyPopup', this.id)">{{key_list[4][1]}}</span>&emsp;&emsp;
+              <img src="{{ url_for('static', filename='highlighter2.webp') }}" class="table-pic" onclick="change_color('4', '{{key_list[4][1]}}')"/>
+            </div>
+            <div class="grid-item">
+              <input type="color" id="key_color_6" class="clickable" value="{{key_list[5][0]}}" oninput="updateKeyColor(value, this.id)">&ensp;
+              <span id="key_name_6" class="clickable" onclick="showKeyPopup('keyPopup', this.id)">{{key_list[5][1]}}</span>&emsp;&emsp;
+              <img src="{{ url_for('static', filename='highlighter2.webp') }}" class="table-pic-right" onclick="change_color('5', '{{key_list[5][1]}}')"/>
+            </div>
+          </div>
+         
+          
+        </div>
+        <div id="keyPopup" style="display:none;" class="card-small-popup">
+          <h2>Enter name for color.</h2>
+          <span class="close-tab" onclick="closePopup('keyPopup')">x</span>
+          <form onsubmit="get_key_text(event);return false;">
+            <input id="key-input" type="text" class="key-submit-text">
+            <input type="submit" class="key-submit" value="Submit">
+          </form>
+        </div>
+      </div>
+
+      <!-- Content for search -->
+      <div id="search" class="inner-column3" style="display: none;">
+        <p id="search-results">Highlight a word to search the text for.</p>
+        <form onsubmit="submitSearch();return false;">
+          <input id="search-box" type="text" class="search-box">
+          <input type="submit" class="search-box-button" value="Search">
+        </form>
+      </div>
+
+      <!-- Content for categories -->
+      <div id="categories" class="inner-column3" style="display: none;">
+        <select class = "dropdown" id="dbDropdown" onchange="showButtons()"></select>
+        <p id="category-paragraph">Choose a category to display contents.</p>
+        <textarea id="catText2" class="userText" rows="1" cols="20"></textarea>
+        <input type="submit" id="addcategoryButton" class="submit-category" value="Add Category" onclick="submitNewCategory()">
+        <input type="submit" id="removecategoryButton" class="remove-category" value="Remove Category" onclick="removeCategory()">
+        <input type="submit" id="addHighlight" class="submit-highlight" value="Add Highlighted to Category" onclick="addHighlightText()">
+        <input type="submit" id="removeHighlight" class="remove-highlight" value="Remove Highlighted from Category" onclick="removeHighlightText()">
+        <input type="submit" id="addText" class="submit-text" value="Add Text" onclick="submitText()">
+        <input type="submit" id="removeText" class="remove-text" value="Remove Text" onclick="removeText()">
+      </div>
+
+          <!-- Content for notes -->
+      <div id="notes" class="inner-column3" style="display: none;">
+        <p id="notes-edit">
+        <textarea id="notes-content" rows="10" cols="70" placeholder = "Type in text box to add notes."></textarea>
+        </p>
+      </div>
+    
+  </div>
+ 
+</div>
+
+{% endblock %}

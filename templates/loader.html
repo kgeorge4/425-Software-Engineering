@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="navbar">
+  <img src="/joyce/static/OIG1.png" class="navbar-logo"  width="50" height="50" />
+  <a>
+    <strong>Welcome </strong>{{ session['user']['name'] }}!<br>
+  </a>
+  <a href="/joyce/loader">Select Text</a>
+  <a href="/joyce/user/signout" class="right">Sign Out</a>
+  <a href="/joyce/accountInfo" class="right">My Account</a>
+  <a href="/joyce/help" class="right">help</a>
+</div>
+
+<div class="card-wrapper">
+
+    <div class="card">
+
+    <h1 class="center">Select Text</h1>
+    <ul>
+        {% for table in tables %}
+        <ul id = '{{table}}-link'>
+            <span class = "clickable" id="mongo-table" onclick="sendTable('{{table}}')">{{table.split("_")[0]}}</span>
+            <span class = "clickable" id="{{table}}-trash" onclick="dropText('{{table}}')"> <img src="/joyce/static/trash-logo.png" style= "float: right" class="navbar-logo"  width="25" height="25" /> </span>
+        </ul>
+        {% endfor %}
+    </ul>
+      
+    </div>
+
+    <div class="card">
+
+      <h1 class="center">Upload Text</h1>
+
+      <form id = "upload" action="/joyce/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".txt">
+        <input type="submit" value="Upload">
+      </form>
+
+      <div id="loading" class="hidden">
+        <span class = loader-text>Uploading</span>
+        <div class="loader"></div>
+      </div>
+
+
+  </div>
+
+</div>
+
+{% endblock %}
